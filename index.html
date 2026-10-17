@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<title>Laiche's PES | دوري الأصدقاء</title>
+<style>
+:root{--bg:#080d18;--line:#283650;--text:#f4f7ff;--muted:#9ba9c2;--gold:#ffd166;--green:#36d399;--red:#ff647c;--blue:#54a8ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(ellipse at top,#182748 0,#080d18 55%);color:var(--text);font-family:Arial,Tahoma,sans-serif;min-height:100vh;padding:20px}
+.container{max-width:1150px;margin:auto}
+header{text-align:center;padding:20px 10px 28px}
+.logo{width:72px;height:72px;margin:auto auto 12px;border-radius:20px;display:grid;place-items:center;font-size:33px;background:linear-gradient(135deg,#ffe29a,#e8a62e);color:#10182a}
+h1{font-size:clamp(26px,6vw,42px);margin:6px 0}
+h1 span{color:var(--gold)}
+.subtitle{color:var(--muted);font-size:14px}
+.pill{display:inline-block;border:1px solid #36d39955;color:var(--green);padding:6px 12px;border-radius:30px;font-size:12px;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.stat,.panel{background:linear-gradient(145deg,#141e32,#101727);border:1px solid var(--line);border-radius:18px}
+.stat{padding:18px;text-align:center}
+.stat .num{font-size:30px;font-weight:bold;color:var(--gold);margin-bottom:6px}
+.stat .label{font-size:13px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{padding:20px;margin-bottom:18px;min-width:0}
+.panel h2{font-size:18px;margin:0 0 16px}
+label{display:block;color:#bdc9de;font-size:13px;margin:12px 0 7px}
+input,select{width:100%;background:#0b1220;color:#fff;border:1px solid #34435f;border-radius:10px;padding:12px;font-size:16px;outline:none;font-family:inherit}
+input:focus,select:focus{border-color:var(--blue)}
+button{border:0;border-radius:10px;padding:12px 16px;font-weight:bold;cursor:pointer;font-size:14px;transition:.2s;font-family:inherit}
+button:hover{filter:brightness(1.12)}
+button:active{transform:translateY(1px)}
+.primary{background:var(--gold);color:#111827;width:100%;margin-top:16px}
+.secondary{background:#263652;color:#fff}
+.danger{background:#4b2030;color:#ff9aaa}
+.small{padding:8px 11px;font-size:12px}
+.score-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:14px}
+.player-select{text-align:center;min-width:0}
+.player-select select{text-align:center}
+.score-input{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:14px}
+.score-input input{max-width:90px;text-align:center;font-size:26px;font-weight:bold;padding:12px 5px}
+.score-input span{color:var(--muted);font-size:18px}
+.vs{font-weight:bold;color:var(--gold);font-size:13px}
+.note{font-size:12px;color:var(--muted);line-height:1.8;margin-top:12px}
+.add-row{display:flex;gap:8px}
+.add-row input{flex:1;min-width:0}
+.player-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.player-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#1b2940;border:1px solid #30415d;border-radius:9px;font-size:13px;max-width:100%;word-break:break-word}
+.remove-player{background:none;color:#ff8296;padding:0 3px;font-size:16px}
+.upload-box{margin-top:14px;border:1.5px dashed #3a4a68;border-radius:12px;padding:14px;background:#0b1220;text-align:center}
+.upload-box.has-image{border-style:solid;border-color:var(--green)}
+.upload-hint{font-size:12px;color:var(--muted);line-height:1.8;margin-top:8px}
+.preview-wrap{margin-top:12px;display:flex;justify-content:center;position:relative}
+.preview-img{max-width:100%;max-height:180px;border-radius:10px;border:1px solid #33435f}
+.clear-img{position:absolute;top:-8px;left:-8px;background:#4b2030;color:#ff9aaa;border-radius:50%;width:26px;height:26px;padding:0;font-size:15px;display:grid;place-items:center}
+.proof-required{display:inline-flex;align-items:center;background:#3a1f2a;color:#ff9aaa;border:1px solid #6b2a3a;border-radius:20px;padding:3px 9px;font-size:11px;margin-right:6px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;white-space:nowrap;min-width:520px}
+th{background:#1b2940;color:#aebbd2;font-size:12px;padding:12px 10px;text-align:center}
+td{padding:13px 10px;border-bottom:1px solid #27334a;text-align:center;font-size:13px}
+tr:last-child td{border-bottom:0}
+td.name{text-align:right;font-weight:bold}
+.rank{font-weight:bold;color:#aab7cd}
+.rank.first{color:var(--gold);font-size:17px}
+.rank.second{color:#d5dfef}
+.rank.third{color:#d99b72}
+.points{color:var(--gold);font-weight:bold;font-size:16px}
+.winner-banner{border:1px solid #ffd16644;background:linear-gradient(100deg,#332817,#171b28);padding:16px;border-radius:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.winner-banner small{color:var(--muted)}
+.winner-banner strong{display:block;font-size:18px;margin-top:6px;color:var(--gold)}
+.winner-icon{font-size:32px}
+.match{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #27334a;flex-wrap:wrap}
+.match:last-child{border-bottom:0}
+.match-info{min-width:0;flex:1}
+.match-names{font-size:13px;font-weight:bold;line-height:1.8}
+.match-date{font-size:11px;color:var(--muted);margin-top:4px}
+.match-score{background:#0b1220;border:1px solid #33435f;border-radius:10px;padding:9px 11px;font-size:18px;font-weight:bold;white-space:nowrap}
+.match-actions{display:flex;gap:5px;flex-direction:column}
+.proof-thumb{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid #33435f;cursor:pointer}
+.proof-thumb:hover{border-color:var(--gold)}
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:13px}
+.footer{text-align:center;color:#7786a0;font-size:12px;padding:16px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal.open{display:flex}
+.modal img{max-width:100%;max-height:90vh;border-radius:12px}
+.modal-close{position:absolute;top:16px;left:16px;background:#4b2030;color:#ff9aaa;border-radius:50%;width:42px;height:42px;padding:0;font-size:22px;display:grid;place-items:center}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:#1b2940;border:1px solid var(--line);color:#fff;padding:13px 18px;border-radius:12px;font-size:14px;box-shadow:0 10px 40px #0008;z-index:2000;transition:.3s;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:#36d39955;color:#a8f0d2}
+.toast.error{border-color:#ff647c55;color:#ffb3c0}
+@media(max-width:900px){.layout{grid-template-columns:1fr;gap:0}}
+@media(max-width:760px){
+  body{padding:12px}
+  h1{font-size:clamp(22px,7vw,30px)}
+  .stats{gap:8px}
+  .stat{padding:12px 5px}
+  .stat .num{font-size:22px}
+  .stat .label{font-size:11px}
+  .panel{padding:14px}
+  .logo{width:60px;height:60px;font-size:28px}
+  .score-input input{max-width:75px;font-size:22px}
+  table{min-width:470px}
+  th,td{padding:10px 7px;font-size:12px}
+  .proof-thumb{width:44px;height:44px}
+  .winner-banner strong{font-size:15px}
+  .winner-icon{font-size:26px}
+}
+@media(max-width:380px){
+  .score-row{grid-template-columns:1fr;gap:6px;justify-items:center}
+  .vs{display:none}
+  .add-row{flex-direction:column}
+  .add-row button{width:100%}
+}
+</style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4b6cb7">
+<link rel="apple-touch-icon" href="icon.png"></head>
+<body>
+<div class="container">
+<header>
+  <div class="logo">⚽</div>
+  <h1>Laiche's <span>PES</span></h1>
+  <div class="subtitle">دوري الأصدقاء • سجل النتائج وسيطر على الصدارة</div>
+  <div class="pill">● نظام ترتيب تلقائي</div>
+</header>
+
+<section class="stats">
+  <div class="stat"><div class="num" id="statPlayers">0</div><div class="label">👥 اللاعبون</div></div>
+  <div class="stat"><div class="num" id="statMatches">0</div><div class="label">⚽ المباريات</div></div>
+  <div class="stat"><div class="num" id="statGoals">0</div><div class="label">🥅 الأهداف</div></div>
+</section>
+
+<div class="winner-banner">
+  <div>
+    <small>🏆 متصدر الدوري</small>
+    <strong id="leaderName">لم يبدأ الدوري بعد</strong>
+    <small id="leaderPoints">سجّل أول مباراة للانطلاق</small>
+  </div>
+  <div class="winner-icon">🏆</div>
+</div>
+
+<div class="layout">
+  <div>
+    <section class="panel">
+      <h2>➕ إضافة لاعب</h2>
+      <form id="playerForm">
+        <label for="playerName">اسم الصديق</label>
+        <div class="add-row">
+          <input id="playerName" maxlength="30" placeholder="مثلاً: عزيز" required>
+          <button class="secondary" type="submit">إضافة +</button>
+        </div>
+      </form>
+      <div id="playersList" class="player-list"></div>
+      <div class="note">لا يمكن حذف لاعب لديه مباريات مسجلة.</div>
+    </section>
+
+    <section class="panel">
+      <h2>🎮 تسجيل نهاية المباراة</h2>
+      <form id="matchForm">
+        <div class="score-row">
+          <div class="player-select"><label for="homePlayer">اللاعب الأول</label><select id="homePlayer" required></select></div>
+          <div class="vs">VS</div>
+          <div class="player-select"><label for="awayPlayer">اللاعب الثاني</label><select id="awayPlayer" required></select></div>
+        </div>
+        <div class="score-input">
+          <input id="homeScore" type="number" min="0" max="99" value="0" required inputmode="numeric">
+          <span>:</span>
+          <input id="awayScore" type="number" min="0" max="99" value="0" required inputmode="numeric">
+        </div>
+        <label for="proofInput"><span class="proof-required">⚠ إجباري</span> صورة إثبات النتيجة</label>
+        <div class="upload-box" id="uploadBox">
+          <input id="proofInput" type="file" accept="image/*" capture="environment" required>
+          <div class="upload-hint" id="uploadHint">📷 التقط صورة النتيجة أو ارفعها من المعرض</div>
+          <div class="preview-wrap" id="previewWrap" style="display:none">
+            <img id="previewImg" class="preview-img" alt="">
+            <button type="button" class="clear-img" id="clearImg">×</button>
+          </div>
+        </div>
+        <div class="note" style="text-align:center">🥇 3 نقاط | 🤝 نقطة | ❌ 0</div>
+        <button class="primary" type="submit" id="submitMatchBtn">✓ تأكيد النتيجة</button>
+      </form>
+    </section>
+  </div>
+
+  <div>
+    <section class="panel">
+      <h2>🏆 ترتيب الأصدقاء</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>الرتبة</th><th>اللاعب</th><th>لعب</th><th>فاز</th><th>تعادل</th><th>خسر</th><th>ف.الأهداف</th><th>النقاط</th>
+          </tr></thead>
+          <tbody id="standings"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>📋 سجل المباريات</h2>
+      <div id="matchesList"><div class="empty">لا توجد مباريات حتى الآن.</div></div>
+    </section>
+  </div>
+</div>
+
+<section class="panel">
+  <h2>⚙️ إدارة الدوري</h2>
+  <button class="secondary" id="exportBtn">📥 CSV</button>
+  <button class="secondary" id="exportPdfBtn" style="background:#3a2a10;color:#ffd166">📄 PDF</button>
+  <button class="danger" id="resetBtn">🗑️ مسح الكل</button>
+</section>
+
+<div class="footer">Laiche's PES • دوري الأصدقاء</div>
+</div>
+
+<div class="modal" id="imgModal">
+  <button class="modal-close" id="modalClose">×</button>
+  <img id="modalImg" alt="">
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY="laiche_pes_v1",MAXW=900,MAXH=900,Q=0.72;
+let state={players:[],matches:[],nextId:1},pendingProof=null;
+
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.players)&&Array.isArray(s.matches)){state=s;if(!Number.isFinite(state.nextId))state.nextId=1}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){alert("المساحة ممتلئة. احذف مباريات قديمة.")}}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c])}
+function getP(id){return state.players.find(p=>p.id===id)}
+function toast(msg,type="success"){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show "+type;clearTimeout(t._t);t._t=setTimeout(()=>t.className="toast "+type,2500)}
+
+function compress(file){return new Promise((res,rej)=>{
+  if(!file.type.startsWith("image/"))return rej(new Error("ليس صورة"));
+  const r=new FileReader();
+  r.onerror=()=>rej(new Error("خطأ في القراءة"));
+  r.onload=()=>{
+    const img=new Image();
+    img.onerror=()=>rej(new Error("صورة غير صالحة"));
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>MAXW||h>MAXH){const k=Math.min(MAXW/w,MAXH/h);w=Math.round(w*k);h=Math.round(h*k)}
+      const c=document.createElement("canvas");c.width=w;c.height=h;
+      const ctx=c.getContext("2d");ctx.fillStyle="#0b1220";ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+      res(c.toDataURL("image/jpeg",Q));
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(file);
+})}
+
+function stats(p){const s={played:0,wins:0,draws:0,losses:0,gf:0,ga:0,points:0};
+  state.matches.forEach(m=>{
+    if(m.homeId===p.id){s.played++;s.gf+=m.homeScore;s.ga+=m.awayScore;
+      if(m.homeScore>m.awayScore){s.wins++;s.points+=3}else if(m.homeScore===m.awayScore){s.draws++;s.points++}else s.losses++;
+    }else if(m.awayId===p.id){s.played++;s.gf+=m.awayScore;s.ga+=m.homeScore;
+      if(m.awayScore>m.homeScore){s.wins++;s.points+=3}else if(m.awayScore===m.homeScore){s.draws++;s.points++}else s.losses++;
+    }
+  });
+  s.diff=s.gf-s.ga;return s;
+}
+function standings(){return state.players.map(p=>({...p,st:stats(p)})).sort((a,b)=>b.st.points-a.st.points||b.st.diff-a.st.diff||b.st.gf-a.st.gf||a.name.localeCompare(b.name,"ar"))}
+
+function renderSelects(){
+  const h=document.getElementById("homePlayer"),a=document.getElementById("awayPlayer");
+  const oh=h.value,oa=a.value;
+  const opt=state.players.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+  const ph='<option value="">اختر اللاعب</option>';
+  h.innerHTML=ph+opt;a.innerHTML=ph+opt;
+  if(state.players.some(p=>String(p.id)===oh))h.value=oh;
+  if(state.players.some(p=>String(p.id)===oa))a.value=oa;
+  if(!h.value&&state.players.length)h.value=String(state.players[0].id);
+  if(!a.value&&state.players.length>1)a.value=String(state.players[1].id);
+}
+function renderPlayers(){
+  const box=document.getElementById("playersList");
+  box.innerHTML=state.players.length?state.players.map(p=>`
+    <div class="player-chip"><span>👤 ${esc(p.name)}</span>
+    <button class="remove-player" data-rm="${p.id}">×</button></div>`).join(""):
+    '<div class="empty">لم تُضف لاعبين بعد.</div>';
+  renderSelects();
+}
+function renderStandings(){
+  const rows=standings(),tb=document.getElementById("standings");
+  tb.innerHTML=rows.length?rows.map((p,i)=>{
+    const s=p.st,c=i===0?"first":i===1?"second":i===2?"third":"";
+    const r=i===0?"🥇":i===1?"🥈":i===2?"🥉":i+1;
+    return `<tr><td class="rank ${c}">${r}</td><td class="name">${esc(p.name)}</td>
+      <td>${s.played}</td><td>${s.wins}</td><td>${s.draws}</td><td>${s.losses}</td>
+      <td style="color:${s.diff>0?'var(--green)':s.diff<0?'var(--red)':'var(--muted)'}">${s.diff>0?'+':''}${s.diff}</td>
+      <td class="points">${s.points}</td></tr>`;
+  }).join(""):'<tr><td colspan="8" class="empty">أضف اللاعبين وابدأ!</td></tr>';
+  const L=rows[0];
+  document.getElementById("leaderName").textContent=L?L.name:"لم يبدأ الدوري بعد";
+  document.getElementById("leaderPoints").textContent=L?
+    `${L.st.points} نقطة • ${L.st.wins} فوز • الفارق ${L.st.diff>0?'+':''}${L.st.diff}`:
+    "أضف اللاعبين وسجّل أول مباراة";
+}
+function renderMatches(){
+  const box=document.getElementById("matchesList"),arr=[...state.matches].reverse();
+  if(!arr.length){box.innerHTML='<div class="empty">لا توجد مباريات حتى الآن.</div>';return}
+  box.innerHTML=arr.map(m=>{
+    const h=getP(m.homeId),a=getP(m.awayId);
+    if(!h||!a)return"";
+    const res=m.homeScore===m.awayScore?"تعادل":(m.homeScore>m.awayScore?h.name:a.name)+" فاز";
+    const pr=m.proof?`<img class="proof-thumb" src="${m.proof}" data-view="${m.id}">`:
+      `<span style="font-size:11px;color:var(--muted)">بدون إثبات</span>`;
+    return `<div class="match">
+      <div class="match-info">
+        <div class="match-names">${esc(h.name)} ضد ${esc(a.name)}</div>
+        <div class="match-date">${esc(m.date)} • ${esc(res)}</div>
+      </div>
+      <div class="match-score">${m.homeScore} : ${m.awayScore}</div>
+      <div class="match-actions">${pr}<button class="danger small" data-del="${m.id}">حذف</button></div>
+    </div>`;
+  }).join("");
+}
+function renderStats(){
+  document.getElementById("statPlayers").textContent=state.players.length;
+  document.getElementById("statMatches").textContent=state.matches.length;
+  document.getElementById("statGoals").textContent=state.matches.reduce((s,m)=>s+m.homeScore+m.awayScore,0);
+}
+function render(){renderPlayers();renderStandings();renderMatches();renderStats()}
+
+function setPreview(d){
+  const w=document.getElementById("previewWrap"),i=document.getElementById("previewImg"),b=document.getElementById("uploadBox"),h=document.getElementById("uploadHint");
+  if(d){i.src=d;w.style.display="flex";b.classList.add("has-image");h.textContent="✅ صورة محمّلة. اضغط × لتبديلها."}
+  else{i.removeAttribute("src");w.style.display="none";b.classList.remove("has-image");h.textContent="📷 التقط صورة النتيجة أو ارفعها من المعرض"}
+}
+
+// Events
+document.getElementById("playerForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const inp=document.getElementById("playerName"),n=inp.value.trim();
+  if(!n)return;
+  if(state.players.some(p=>p.name.toLowerCase()===n.toLowerCase())){alert("الاسم موجود!");return}
+  state.players.push({id:state.nextId++,name:n});
+  inp.value="";save();render();inp.focus();
+});
+document.getElementById("playersList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-rm]");if(!b)return;
+  const id=Number(b.dataset.rm),p=getP(id);if(!p)return;
+  if(state.matches.some(m=>m.homeId===id||m.awayId===id)){alert("لا يمكن حذف لاعب لديه مباريات!");return}
+  if(!confirm(`حذف ${p.name}؟`))return;
+  state.players=state.players.filter(x=>x.id!==id);save();render();
+});
+document.getElementById("proofInput").addEventListener("change",async e=>{
+  const f=e.target.files&&e.target.files[0];
+  if(!f){pendingProof=null;setPreview(null);return}
+  try{pendingProof=await compress(f);setPreview(pendingProof)}
+  catch(err){alert(err.message);pendingProof=null;setPreview(null);e.target.value=""}
+});
+document.getElementById("clearImg").addEventListener("click",()=>{
+  pendingProof=null;setPreview(null);document.getElementById("proofInput").value="";
+});
+document.getElementById("matchForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(state.players.length<2){alert("أضف لاعبين أولاً!");return}
+  const h=Number(document.getElementById("homePlayer").value),a=Number(document.getElementById("awayPlayer").value);
+  const hs=Number(document.getElementById("homeScore").value),as=Number(document.getElementById("awayScore").value);
+  if(!getP(h)||!getP(a)){alert("اختر اللاعبين");return}
+  if(h===a){alert("اللاعب لا يلعب ضد نفسه!");return}
+  if(!Number.isInteger(hs)||!Number.isInteger(as)||hs<0||as<0||hs>99||as>99){alert("أهداف غير صحيحة");return}
+  if(!pendingProof){alert("⚠ لازم تحمّل صورة إثبات!");document.getElementById("proofInput").focus();return}
+  const H=getP(h),A=getP(a);
+  const res=hs===as?"تعادل":(hs>as?H.name:A.name)+" فاز";
+  if(!confirm(`${H.name} ${hs} - ${as} ${A.name}\n${res}\nتأكيد؟`))return;
+  state.matches.push({id:state.nextId++,homeId:h,awayId:a,homeScore:hs,awayScore:as,proof:pendingProof,date:new Date().toLocaleString("ar-DZ")});
+  save();render();
+  document.getElementById("homeScore").value=0;
+  document.getElementById("awayScore").value=0;
+  document.getElementById("proofInput").value="";
+  pendingProof=null;setPreview(null);
+  toast("✅ تم تسجيل المباراة!","success");
+});
+document.getElementById("matchesList").addEventListener("click",e=>{
+  const d=e.target.closest("[data-del]");
+  if(d){const id=Number(d.dataset.del);
+    if(!confirm("حذف المباراة؟"))return;
+    state.matches=state.matches.filter(m=>m.id!==id);save();render();return}
+  const v=e.target.closest("[data-view]");
+  if(v){const m=state.matches.find(x=>x.id===Number(v.dataset.view));
+    if(m&&m.proof){document.getElementById("modalImg").src=m.proof;document.getElementById("imgModal").classList.add("open")}}
+});
+document.getElementById("modalClose").addEventListener("click",()=>document.getElementById("imgModal").classList.remove("open"));
+document.getElementById("imgModal").addEventListener("click",e=>{if(e.target.id==="imgModal")e.currentTarget.classList.remove("open")});
+
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  if(!confirm("حذف الكل نهائياً؟"))return;
+  if(!confirm("تأكيد أخير؟"))return;
+  state={players:[],matches:[],nextId:1};save();render();
+});
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const rows=standings();if(!rows.length){alert("أضف لاعبين أولاً");return}
+  const E=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const lines=[["#","اللاعب","لعب","فاز","تعادل","خسر","له","عليه","الفارق","النقاط"],
+    ...rows.map((p,i)=>[i+1,p.name,p.st.played,p.st.wins,p.st.draws,p.st.losses,p.st.gf,p.st.ga,p.st.diff,p.st.points])];
+  const csv="\uFEFF"+lines.map(r=>r.map(E).join(";")).join("\r\n");
+  const b=new Blob([csv],{type:"text/csv;charset=utf-8;"});const u=URL.createObjectURL(b);
+  const a=document.createElement("a");a.href=u;a.download="Laiches-PES.csv";a.click();URL.revokeObjectURL(u);
+});
+document.getElementById("exportPdfBtn").addEventListener("click",()=>{
+  const rows=standings();if(!rows.length){alert("أضف لاعبين وسجّل مباريات أولاً");return}
+  const now=new Date().toLocaleString("ar-DZ");
+  const goals=state.matches.reduce((s,m)=>s+m.homeScore+m.awayScore,0);
+  const sRows=rows.map((p,i)=>`<tr><td>${i+1}</td><td class="n">${esc(p.name)}</td>
+    <td>${p.st.played}</td><td>${p.st.wins}</td><td>${p.st.draws}</td><td>${p.st.losses}</td>
+    <td>${p.st.gf}</td><td>${p.st.ga}</td><td>${p.st.diff>0?'+':''}${p.st.diff}</td><td class="pts">${p.st.points}</td></tr>`).join("");
+  const mRows=[...state.matches].reverse().map((m,i)=>{
+    const h=getP(m.homeId),a=getP(m.awayId);if(!h||!a)return"";
+    const r=m.homeScore===m.awayScore?"تعادل":(m.homeScore>m.awayScore?h.name:a.name)+" فاز";
+    return `<tr><td>${state.matches.length-i}</td><td class="n">${esc(h.name)}</td>
+      <td class="sc">${m.homeScore} - ${m.awayScore}</td><td class="n">${esc(a.name)}</td>
+      <td>${esc(r)}</td><td class="dt">${esc(m.date)}</td></tr>`;
+  }).join("");
+  const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>تقرير الدوري</title>
+  <style>@page{size:A4;margin:14mm}body{font-family:Arial,Tahoma,sans-serif;color:#111;margin:0}
+  .head{text-align:center;border-bottom:3px solid #e8a62e;padding-bottom:12px;margin-bottom:16px}
+  .head h1{margin:0;font-size:26px}.head h1 span{color:#e8a62e}.head p{margin:6px 0 0;font-size:12px;color:#555}
+  .sum{display:flex;gap:10px;margin-bottom:16px}.sum>div{flex:1;border:1px solid #ddd;border-radius:8px;padding:10px;text-align:center}
+  .sum .num{font-size:20px;font-weight:bold;color:#e8a62e}.sum .lbl{font-size:11px;color:#666;margin-top:4px}
+  h2{font-size:15px;margin:18px 0 8px;padding-bottom:6px;border-bottom:2px solid #e8a62e;color:#10182a}
+  table{width:100%;border-collapse:collapse;font-size:11px}th{background:#10182a;color:#fff;padding:7px 4px;text-align:center}
+  td{border-bottom:1px solid #eee;padding:6px 4px;text-align:center}
+  td.n{text-align:right;font-weight:bold}td.pts{color:#e8a62e;font-weight:bold}td.sc{font-weight:bold}td.dt{font-size:10px;color:#666}
+  tr:nth-child(even) td{background:#fafafa}
+  .foot{margin-top:18px;text-align:center;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:8px}</style></head><body>
+  <div class="head"><h1>Laiche's <span>PES</span></h1><p>تقرير دوري الأصدقاء • ${now}</p></div>
+  <div class="sum"><div><div class="num">${state.players.length}</div><div class="lbl">لاعب</div></div>
+    <div><div class="num">${state.matches.length}</div><div class="lbl">مباراة</div></div>
+    <div><div class="num">${goals}</div><div class="lbl">هدف</div></div></div>
+  <h2>🏆 ترتيب الأصدقاء</h2><table><thead><tr>
+    <th>#</th><th>اللاعب</th><th>لعب</th><th>فاز</th><th>تعادل</th><th>خسر</th>
+    <th>له</th><th>عليه</th><th>الفارق</th><th>النقاط</th></tr></thead><tbody>${sRows}</tbody></table>
+  <h2>📋 سجل المباريات</h2><table><thead><tr>
+    <th>#</th><th>اللاعب 1</th><th>النتيجة</th><th>اللاعب 2</th><th>الفائز</th><th>التاريخ</th></tr></thead>
+    <tbody>${mRows}</tbody></table>
+  <div class="foot">Laiche's PES • دوري الأصدقاء</div>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}</script>
+</body></html>`;
+  const w=window.open("","_blank");if(!w){alert("اسمح بالنوافذ المنبثرة");return}
+  w.document.open();w.document.write(html);w.document.close();w.focus();
+  setTimeout(()=>w.print(),400);
+});
+
+load();render();
+</script>
+</body>
+</html>
